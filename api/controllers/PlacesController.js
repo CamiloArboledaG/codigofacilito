@@ -1,6 +1,7 @@
 //modelo
 const Place = require("../models/Place");
 const upload = require("../config/upload");
+const Uploader = require("../models/Uploader");
 
 //middleware
 function find(req, res, next) {
@@ -51,7 +52,7 @@ function show(req, res) {
   res.json(req.place);
 }
 
-function create(req, res) {
+function create(req, res, next) {
   //Crear un nuevo lugar
   Place.create({
     title: req.body.title,
@@ -61,11 +62,11 @@ function create(req, res) {
     closeHour: req.body.closeHour,
   })
     .then((doc) => {
-      res.json(doc);
+      req.place = doc;
+      next();
     })
     .catch((err) => {
-      console.log(err);
-      res.json(err);
+      next(err);
     });
 }
 
@@ -142,10 +143,48 @@ function destroy(req, res) {
 
 function multerMiddleware() {
   //si es una imagen usamos avatar, usamos fields para que nos de un array con todas las imagenes
+  /* A middleware that is going to be used in the update route. It is going to be used to upload
+  images. */
   return upload.fields([
     { name: "avatar", maxCount: 1 },
     { name: "cover", maxCount: 1 },
   ]);
 }
 
-module.exports = { index, show, create, update, destroy, find, multerMiddleware };
+function saveImage(req, res) {
+  if (req.place) {
+    const files = ["avatar", "cover"];
+    const promises = [];
+    files.forEach((imageType) => {
+      if (req.files && req.files[imageType]) {
+        // req.place.avatar = req.files.avatar[0].secure_url;
+        const path = req.files[imageType][0].path;
+        promises.push(req.place.updateImage(path, imageType));
+      }
+    });
+    Promise.all(promises)
+      .then((results) => {
+        console.log(results);
+        res.json(req.place);
+      })
+      .catch((err) => {
+        console.log(err);
+        res.json(err);
+      });
+  } else {
+    res.status(422).json({
+      error: req.error || "No files were uploaded.",
+    });
+  }
+}
+
+module.exports = {
+  index,
+  show,
+  create,
+  update,
+  destroy,
+  find,
+  multerMiddleware,
+  saveImage,
+};

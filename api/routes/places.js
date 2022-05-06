@@ -8,7 +8,14 @@ const placesController = require("../controllers/PlacesController");
 
 //No agregamos como función al final de cada una con (), se envía es la función para que se ejecute en el momento correspondiente
 
-router.route("/").get(placesController.index).post(placesController.multerMiddleware(), placesController.create);
+router
+  .route("/")
+  .get(placesController.index)
+  .post(
+    placesController.multerMiddleware(),
+    placesController.create,
+    placesController.saveImage
+  );
 router
   .route("/:id")
   .get(placesController.find, placesController.show)

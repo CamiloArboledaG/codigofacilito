@@ -1,18 +1,18 @@
 const cloudinary = require("cloudinary");
 
-const secrects = require("../config/secrets");
+const secrets = require("../config/secrets");
 
-cloudinary.config(secrects.cloudinary);
+/* Configuring the cloudinary API with the API key and secret. */
+cloudinary.config(secrets.cloudinary);
 
+/* Exporting a function that returns a promise. */
 module.exports = function (file) {
   return new Promise((resolve, reject) => {
-    cloudinary.uploader.upload(file, (result) => {
+    /* Uploading the file to the cloudinary server. */
+    cloudinary.uploader.upload(file, function (result) {
       console.log(result);
-      if (result.secure_url) {
-        resolve(result.secure_url);
-      } else {
-        reject(result.error);
-      }
+      if (result.secure_url) return resolve(result.secure_url);
+      reject(new Error("Could not upload the file."));
     });
   });
 };
