@@ -5,7 +5,7 @@ const Uploader = require("../models/Uploader");
 
 //middleware
 function find(req, res, next) {
-  Place.findById(req.params.id)
+  Place.findOne({ slug: req.params.id })//cambiamos el slug por id, encerramos en corchetes y ponemos findOne
     .then((place) => {
       req.place = place;
       next();
