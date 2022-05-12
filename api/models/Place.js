@@ -12,6 +12,7 @@ let placeSchema = new mongoose.Schema({
     type: String,
     unique: true,
   },
+  address: String,
   description: String,
   acceptsCreditCards: {
     type: Boolean,
@@ -39,7 +40,7 @@ placeSchema.methods.saveImageUrl = function (secure_url, imageType) {
 //hooks mongoose, ciclos que guarda un documento. Despues de que se guarde o antes, ejecuta una funcion
 /* It's a hook that is called before the document is saved. It generates a slug for the document. */
 placeSchema.pre("save", function (next) {
-  if (this._id) {
+  if (this.slug) {
     return next();
   }
   genetaresSlugAndContinue.call(this, 0, next);

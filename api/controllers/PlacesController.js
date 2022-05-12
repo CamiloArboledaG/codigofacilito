@@ -2,10 +2,20 @@
 const Place = require("../models/Place");
 const upload = require("../config/upload");
 const Uploader = require("../models/Uploader");
+const helpers = require("./helpers");
+
+const validParams = [
+  "title",
+  "description",
+  "address",
+  "acceptsCreditCards",
+  "openHour",
+  "closeHour",
+];
 
 //middleware
 function find(req, res, next) {
-  Place.findOne({ slug: req.params.id })//cambiamos el slug por id, encerramos en corchetes y ponemos findOne
+  Place.findOne({ slug: req.params.id }) //cambiamos el slug por id, encerramos en corchetes y ponemos findOne
     .then((place) => {
       req.place = place;
       next();
@@ -54,13 +64,8 @@ function show(req, res) {
 
 function create(req, res, next) {
   //Crear un nuevo lugar
-  Place.create({
-    title: req.body.title,
-    description: req.body.description,
-    acceptsCreditCards: req.body.acceptsCreditCards,
-    openHour: req.body.openHour,
-    closeHour: req.body.closeHour,
-  })
+  const params = helpers.paramsBuilder(validParams, req.body);
+  Place.create(params)
     .then((doc) => {
       req.place = doc;
       next();
@@ -86,25 +91,11 @@ function update(req, res) {
   }
   //Quitamos esto si usamos req.body en object.assign, pero es inseguro.
 
-  let attributes = [
-    "title",
-    "description",
-    "acceptsCreditCards",
-    "openHour",
-    "closeHour",
-  ];
-  let placeParams = {};
-  attributes.forEach((attribute) => {
-    if (Object.prototype.hasOwnProperty.call(req.body, attribute)) {
-      placeParams[attribute] = req.body[attribute];
-    }
-  });
-
   //El problema de la siguiente línea es que si existe alguien malisioso que intenta tener permisos extras
   //puede mandarlo por el body y este lo aceptaría
   //req.place = Object.assign(req.place, req.body);
-
-  req.place = Object.assign(req.place, placeParams);
+  const params = helpers.paramsBuilder(validParams, req.body);
+  req.place = Object.assign(req.place, params);
   req.place
     .save()
     .then((doc) => {
