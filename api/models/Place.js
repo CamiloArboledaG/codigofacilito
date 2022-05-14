@@ -61,7 +61,8 @@ placeSchema.plugin(mongoosePaginate);
  * It takes a title, slugifies it, checks if the slug is unique, if it's not, it adds a number to the
  * end of the slug and checks again.
  * @param count - The number of times the slug has been generated.
- * @param next - The next function to be called after the slug is generated.
+ * @param next - The next func
+ * tion to be called after the slug is generated.
  */
 function genetaresSlugAndContinue(count, next) {
   this.slug = slugify(this.title);

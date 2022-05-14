@@ -7,7 +7,7 @@ var logger = require("morgan"); //Registrar en un log todas las peticiones que s
 
 //Rutas
 const places = require("./routes/places");
-
+const users = require("./routes/users");
 
 //Base de datos
 const db = require("./config/database");
@@ -25,6 +25,7 @@ app.use(express.urlencoded({ extended: false }));
 app.use(express.static(path.join(__dirname, "public")));
 
 app.use("/places", places);
+app.use("/users", users);
 
 
 // catch 404 and forward to error handler
