@@ -8,6 +8,8 @@ var logger = require("morgan"); //Registrar en un log todas las peticiones que s
 //Rutas
 const places = require("./routes/places");
 const users = require("./routes/users");
+//No ponemos esto dentro de los usuarios por respetar las reglas REST
+const sessions = require("./routes/sessions");
 
 //Base de datos
 const db = require("./config/database");
@@ -26,6 +28,7 @@ app.use(express.static(path.join(__dirname, "public")));
 
 app.use("/places", places);
 app.use("/users", users);
+app.use("/sessions", sessions);
 
 
 // catch 404 and forward to error handler
