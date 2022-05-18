@@ -65,6 +65,8 @@ function show(req, res) {
 function create(req, res, next) {
   //Crear un nuevo lugar
   const params = helpers.paramsBuilder(validParams, req.body);
+  console.log(req.auth);
+  params["_user"] = req.auth.id;
   Place.create(params)
     .then((doc) => {
       req.place = doc;
