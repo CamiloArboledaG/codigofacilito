@@ -11,6 +11,5 @@ router
     sessionsController.generateToken,
     sessionsController.sendToken
   )
-  .get(usersCrontroller.myPlaces);
 
 module.exports = router;

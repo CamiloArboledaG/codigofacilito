@@ -4,6 +4,8 @@ let router = express.Router();
 
 const placesController = require("../controllers/PlacesController");
 
+const authenticateOwner = require("../middlewares/authenticateOwner");
+
 //CRUD
 
 //No agregamos como función al final de cada una con (), se envía es la función para que se ejecute en el momento correspondiente
@@ -19,8 +21,8 @@ router
 router
   .route("/:id")
   .get(placesController.find, placesController.show)
-  .put(placesController.find, placesController.update)
-  .delete(placesController.find, placesController.destroy);
+  .put(placesController.find, authenticateOwner, placesController.update)
+  .delete(placesController.find, authenticateOwner, placesController.destroy);
 
 module.exports = router;
 
