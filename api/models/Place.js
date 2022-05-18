@@ -22,6 +22,11 @@ let placeSchema = new mongoose.Schema({
   avatarImage: String,
   openHour: Number,
   closeHour: Number,
+  _user:{
+    type: mongoose.Schema.Types.ObjectId,
+    ref: "User",
+    required: true,
+  }
 });
 
 placeSchema.methods.updateImage = function (path, imageType) {
