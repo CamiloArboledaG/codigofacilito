@@ -1,5 +1,6 @@
 const mongoose = require("mongoose");
 const mongooseBcrypt = require("mongoose-bcrypt");
+const Place = require("./Place");
 
 let userSchema = new mongoose.Schema({
   email: {
@@ -30,6 +31,10 @@ database. If it is, it will make the user an admin. */
   });
 });
 
+//usaremos un virtual para conocer todos los lugares creados por el usuario.
+userSchema.virtual("places").get(function () {
+  return Place.find({ user: this._id });
+})
 //Instalamos mongoose-bcrypt para encriptar las contraseñas
 userSchema.plugin(mongooseBcrypt);
 

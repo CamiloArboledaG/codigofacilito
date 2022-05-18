@@ -18,4 +18,17 @@ function create(req, res, next) {
     });
 }
 
-module.exports = { create };
+function myPlaces(req, res) {
+  User.findOne({ _id: req.auth.id }).then((user) => {
+    user.places.then((places) => {
+      res.json(places);
+    });
+  }).catch((error) => {
+    console.log(error);
+    res.status(422).json({
+      error,
+    });
+  });
+}
+
+module.exports = { create, myPlaces };

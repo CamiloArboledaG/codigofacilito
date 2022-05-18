@@ -35,8 +35,8 @@ app.use(express.static(path.join(__dirname, "public")));
 
 app.use(
   jwt({ secret: secrets.jwtSecret, algorithms: ["HS256"] }).unless({
-    path: ["/sessions", "/users"],
-    method: "GET",
+    path: ["/sessions"],
+    //method: "GET",
   })
 );
 
