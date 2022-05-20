@@ -17,6 +17,8 @@ const places = require("./routes/places");
 const users = require("./routes/users");
 //No ponemos esto dentro de los usuarios por respetar las reglas REST
 const sessions = require("./routes/sessions");
+//relación muchos a muchos
+const favorites = require("./routes/favorites");
 
 //Base de datos
 const db = require("./config/database");
@@ -43,6 +45,7 @@ app.use(
 app.use("/places", places);
 app.use("/users", users);
 app.use("/sessions", sessions);
+app.use("/favorites", favorites);
 
 // catch 404 and forward to error handler
 app.use(function (req, res, next) {
