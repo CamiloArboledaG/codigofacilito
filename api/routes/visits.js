@@ -8,7 +8,7 @@ const secrets = require("../config/secrets");
 
 router
   .route("/")
-  .get(visitsController.index)
+  .get(jwt({ secret: secrets.jwtSecret, algorithms: ["HS256"] }),visitsController.index)
   .post(visitsController.create);
 
 router

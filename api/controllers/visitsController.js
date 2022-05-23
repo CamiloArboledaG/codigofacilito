@@ -22,8 +22,8 @@ function index(req, res) {
 
   if (req.place) {
     promise = req.place.visits;
-  } else if (req.user) {
-    promise = Visit.forUser(req.user, req.query.page || 1);
+  } else if (req.auth) {
+    promise = Visit.forUser(req.auth.id, req.query.page || 1);
   }
   if (promise) {
     promise
@@ -33,8 +33,8 @@ function index(req, res) {
       .catch((error) => {
         res.status(500).json(error);
       });
-  } else{
-    res.status(404).json({ });
+  } else {
+    res.status(404).json({});
   }
 }
 
