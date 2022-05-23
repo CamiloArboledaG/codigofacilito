@@ -15,17 +15,27 @@ function find(req, res, next) {
     .catch(next);
 }
 
+//Haremos todas las visitas de un usuario y luego todas las visitas de un lugar
+
 function index(req, res) {
-  User.findOne({ _id: req.auth.id })
-    .then((user) => {
-      user.favorites.then((fav) => {
-        res.json(fav);
+  let promise = null;
+
+  if (req.place) {
+    promise = req.place.visits;
+  } else if (req.user) {
+    promise = Visit.forUser(req.user, req.query.page || 1);
+  }
+  if (promise) {
+    promise
+      .then((visits) => {
+        res.json(visits);
+      })
+      .catch((error) => {
+        res.status(500).json(error);
       });
-    })
-    .catch((error) => {
-      console.log(error);
-      res.json({ error });
-    });
+  } else{
+    res.status(404).json({ });
+  }
 }
 
 function create(req, res) {

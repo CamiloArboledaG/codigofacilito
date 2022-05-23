@@ -2,17 +2,15 @@ const express = require("express");
 let router = express.Router();
 const visitsController = require("../controllers/visitsController");
 const authenticateOwner = require("../middlewares/authenticateOwner");
-
-var { expressjwt: jwt } = require("express-jwt");
-const secrets = require("../config/secrets");
+const placesController = require("../controllers/placesController");
 
 router
-  .route("/")
-  .get(visitsController.index)
-  .post(visitsController.create);
+  .route("/:id/visits")
+  .get(placesController.find, visitsController.index)
+  .post(placesController.find, visitsController.create);
 
 router
-  .route("/:visit_id")
+  .route("/:id/visits/:visit_id")
   .delete(
     visitsController.find,
     authenticateOwner,

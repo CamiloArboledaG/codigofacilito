@@ -20,6 +20,7 @@ const sessions = require("./routes/sessions");
 //relación muchos a muchos
 const favorites = require("./routes/favorites");
 const visits = require("./routes/visits");
+const visitsPlaces = require("./routes/visitsPlaces");
 
 //Base de datos
 const db = require("./config/database");
@@ -44,6 +45,7 @@ app.use(
 );
 
 app.use("/places", places);
+app.use("/places", visitsPlaces);
 app.use("/users", users);
 app.use("/sessions", sessions);
 app.use("/favorites", favorites);
