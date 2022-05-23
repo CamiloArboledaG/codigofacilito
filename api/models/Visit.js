@@ -1,6 +1,11 @@
 const mongoose = require("mongoose");
 const monogoosePaginate = require("mongoose-paginate");
 
+//Enums son valores predefinidos para un campo.
+//Permite delimitar los valores que puede tomar un campo.
+
+const REACTIONS = ["like", "love", "dislike", "haha", "sad", "angry"];
+
 let visitSchema = new mongoose.Schema({
   _user: {
     type: mongoose.Schema.Types.ObjectId,
@@ -12,7 +17,13 @@ let visitSchema = new mongoose.Schema({
     ref: "Place",
     required: true,
   },
-  observation: String
+  reaction: {
+    type: String,
+    //arreglo con los valores que son validos para el campo, si no esta en el arreglo no se guarda
+    enum: REACTIONS,
+    //default: "like",
+  },
+  observation: String,
 });
 
 visitSchema.plugin(monogoosePaginate);
