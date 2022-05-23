@@ -3,7 +3,13 @@ let router = express.Router();
 const favoritesController = require("../controllers/FavoritesController");
 const authenticateOwner = require("../middlewares/authenticateOwner");
 
-router.route("/").post(favoritesController.create);
+var { expressjwt: jwt } = require("express-jwt");
+const secrets = require("../config/secrets");
+
+router
+  .route("/")
+  .get(jwt({ secret: secrets.jwtSecret, algorithms: ["HS256"] }), favoritesController.index)
+  .post(favoritesController.create);
 
 router
   .route("/:id")

@@ -4,15 +4,29 @@ const validParams = ["_place"];
 
 const FavoritePlace = require("../models/FavoritePlace");
 
+const User = require("../models/User");
+
 function find(req, res, next) {
   FavoritePlace.findById(req.params.id)
     .then((favorite) => {
       req.mainObj = favorite;
       req.favorite = favorite;
-      res.json(favorite);
       next();
     })
     .catch(next);
+}
+
+function index(req, res) {
+  User.findOne({ _id: req.auth.id })
+    .then((user) => {
+      user.favorites.then((fav) => {
+        res.json(fav);
+      });
+    })
+    .catch((error) => {
+      console.log(error);
+      res.json({ error });
+    });
 }
 
 function create(req, res) {
@@ -22,20 +36,20 @@ function create(req, res) {
     .then((favorite) => {
       res.json(favorite);
     })
-    .catch((err) => {
-      res.status(422).json({ error: err });
+    .catch((error) => {
+      res.status(422).json({ error });
     });
 }
 
 function destroy(req, res) {
   req.favorite
     .remove()
-    .then(() => {
+    .then((doc) => {
       res.json({});
     })
-    .catch((err) => {
-      res.status(500).json({ error: err });
+    .catch((error) => {
+      res.status(500).json({ error });
     });
 }
 
-module.exports = { create, find, destroy };
+module.exports = { create, find, destroy, index };
