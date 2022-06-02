@@ -21,6 +21,7 @@ const sessions = require("./routes/sessions");
 const favorites = require("./routes/favorites");
 const visits = require("./routes/visits");
 const visitsPlaces = require("./routes/visitsPlaces");
+const applications = require("./routes/applications");
 
 //Base de datos
 const db = require("./config/database");
@@ -50,6 +51,7 @@ app.use("/users", users);
 app.use("/sessions", sessions);
 app.use("/favorites", favorites);
 app.use("/visits", visits);
+app.use("/applications", applications);
 
 // catch 404 and forward to error handler
 app.use(function (req, res, next) {
