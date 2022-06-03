@@ -17,11 +17,10 @@ function find(req, res, next) {
 }
 
 function index(req, res) {
-  User.findOne({ _id: req.auth.id })
-    .then((user) => {
-      user.favorites.then((fav) => {
-        res.json(fav);
-      });
+  if(!req.fullUser) return res.json({});
+  req.fullUser.favorites
+    .then((fav) => {
+      res.json(fav);
     })
     .catch((error) => {
       console.log(error);
