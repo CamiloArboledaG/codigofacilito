@@ -1,3 +1,5 @@
+const Application = require("./models/Application");
+
 var createError = require("http-errors");
 var express = require("express");
 var path = require("path");
@@ -23,6 +25,9 @@ const visits = require("./routes/visits");
 const visitsPlaces = require("./routes/visitsPlaces");
 const applications = require("./routes/applications");
 
+const findAppBySecret = require("./middlewares/findAppBySecret");
+const authApp = require("./middlewares/authApp");
+
 //Base de datos
 const db = require("./config/database");
 
@@ -38,6 +43,9 @@ app.use(express.urlencoded({ extended: false }));
 //app.use(cookieParser());
 app.use(express.static(path.join(__dirname, "public")));
 
+app.use(findAppBySecret);
+app.use(authApp);
+
 app.use(
   jwt({ secret: secrets.jwtSecret, algorithms: ["HS256"] }).unless({
     path: ["/sessions", "/users"],
@@ -52,6 +60,12 @@ app.use("/sessions", sessions);
 app.use("/favorites", favorites);
 app.use("/visits", visits);
 app.use("/applications", applications);
+
+/** 
+app.get("/demo", function(req,res){
+  Application.remove({}).then(r => res.json({}));
+})
+*/
 
 // catch 404 and forward to error handler
 app.use(function (req, res, next) {
