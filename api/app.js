@@ -26,7 +26,9 @@ const visitsPlaces = require("./routes/visitsPlaces");
 const applications = require("./routes/applications");
 
 const findAppBySecret = require("./middlewares/findAppBySecret");
+const findAppByApplicationId = require("./middlewares/findAppByApplicationId");
 const authApp = require("./middlewares/authApp");
+const allowCORs = require("./middlewares/allowCORs");
 
 //Base de datos
 const db = require("./config/database");
@@ -44,12 +46,14 @@ app.use(express.urlencoded({ extended: false }));
 app.use(express.static(path.join(__dirname, "public")));
 
 app.use(findAppBySecret);
+app.use(findAppByApplicationId);
 app.use(authApp);
+app.use(allowCORs);
 
 app.use(
   jwt({ secret: secrets.jwtSecret, algorithms: ["HS256"] }).unless({
     path: ["/sessions", "/users"],
-    method: "GET",
+    method: ["GET", "OPTIONS"],
   })
 );
 

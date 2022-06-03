@@ -1,10 +1,18 @@
-const Application = require("../models/Application");
+const Application = require('../models/Application');
 
-module.exports = function(req, res, next){
-    Application.count({}).then(count => {
-        if(count > 0 && !req.headers.secret) return next(new Error("No se encontró la aplicación"));
+module.exports = function(options){
+  let AuthApp = function(req,res,next){
+    Application.count({}).then(appCount=>{
+      if(appCount > 0 && !req.application) return next(new Error('An application is required to consume this API'));
 
-        req.validApp = true;
-        next();
-    }).catch(err => next(err));
+      if(!req.validRequest) return next(new Error('Origin invalid'));
+      next();
+    }).catch(next);
+  }
+
+
+  AuthApp.unless = require('express-unless');
+  AuthApp.unless({methods: ['OPTIONS']});
+  return AuthApp;
+
 }
